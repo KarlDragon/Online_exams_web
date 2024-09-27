@@ -1,0 +1,48 @@
+$font: 'Times New Roman', Times, serif;
+$color: #04667e;
+
+main {
+    background-color: $color;
+    font-family: $font;
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    padding-top: 100px; // To account for the fixed header
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background-color: rgb(225, 115, 115);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000; // Ensure header stays on top
+}
+
+.LoginRegistorSpot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(0, 135, 252);
+    padding: 10px;
+}
+
+.text {
+    background-color: $color;
+    font-family: $font;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
