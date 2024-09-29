@@ -114,6 +114,20 @@ h1 {
   text-decoration: underline;
 }
 
+.mode-selector-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.mode-selector-container label {
+  position: absolute;
+  left: 30px;
+  color: $color-secondary;
+  font-size: 16px;
+}
+
 button {
   background:  $color-secondary;
   color: $color-primary;

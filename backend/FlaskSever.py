@@ -23,10 +23,11 @@ def register():
     email = data.get('email')
     username = data.get('username')
     password = data.get('password')
+    mode = data.get('mode')
     # Perform registration logic here
-    success = register_user(email, username, password)
+    success = register_user(email, username, password, mode)
     if success:
-        return jsonify({'message': 'Register successfully', 'email': email, 'username': username, 'password': password})
+        return jsonify({'message': 'Register successfully', 'email': email, 'username': username, 'password': password, 'mode': mode})
     else:
         return jsonify({'message': 'Registration failed'}), 500
 

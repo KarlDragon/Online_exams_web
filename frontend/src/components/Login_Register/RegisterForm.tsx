@@ -2,12 +2,18 @@ import React, { useState } from 'react';
 import './LoginRegisterStyle.scss';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import ModeSelector from './Modeselector';
 
 const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  
+  const [mode, setMode] = useState('Teacher');
+  const modeOptions = {
+    'Giáo viên': 'Teacher',
+    'Học sinh': 'Student'
+  };
+
   const [emailError, setEmailError] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -18,6 +24,11 @@ const RegisterForm: React.FC = () => {
   const validUsernameRegex = /^[a-zA-Z0-9]+$/;
   const validEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const validPasswordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+  const handleModeSelect = (selectedMode: string) => {
+    setMode(selectedMode);
+    console.log('Selected mode:', selectedMode);
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -48,7 +59,8 @@ const RegisterForm: React.FC = () => {
       const response = await axios.post('http://localhost:5000/register', {
         email,
         username,
-        password
+        password,
+        mode
       });
 
       const { data } = response;
@@ -101,6 +113,13 @@ const RegisterForm: React.FC = () => {
             />
             <label>Mật khẩu</label>
             {passwordError && <p className="error-message">{passwordError}</p>}
+          </div>
+          <div className='mode-selector-container'>
+            <label>Tôi là:</label>
+            <ModeSelector 
+              options={modeOptions} 
+              onSelect={handleModeSelect}
+            />
           </div>
           {generalError && <p className="error-message">{generalError}</p>}
           <button type="submit">Đăng ký</button>

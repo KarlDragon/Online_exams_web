@@ -31,16 +31,16 @@ def authenticate_user(username, password):
     
     return user
 
-def register_user(email, username, password):
+def register_user(email, username, password, mode):
     cnx = get_db_connection()
     if not cnx:
         print("Database connection failed")
         return False
     
     cursor = cnx.cursor()
-    query = "INSERT INTO users (email, username, password) VALUES (%s, %s, %s)"
+    query = "INSERT INTO users (email, username, password, mode) VALUES (%s, %s, %s, %s)"
     try:
-        cursor.execute(query, (email, username, password))
+        cursor.execute(query, (email, username, password, mode ))
         cnx.commit()
         success = True
     except mysql.connector.Error as err:

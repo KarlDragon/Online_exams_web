@@ -1,0 +1,36 @@
+.mode-selector {
+    position: relative;
+    width: 200px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .selected-option {
+    background-color: #2c3e50;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #34495e;
+    border-radius: 0 0 5px 5px;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    z-index: 1;
+  }
+  
+  .options li {
+    padding: 10px;
+    cursor: pointer;
+    color: white;
+  
+    &:hover {
+      background-color: #2c3e50;
+    }
+  }
