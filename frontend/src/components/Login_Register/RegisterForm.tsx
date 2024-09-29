@@ -1,17 +1,19 @@
-import React from 'react';
-import './LoginRegisterStyle.scss'
+import React, { useState } from 'react';
+import './LoginRegisterStyle.scss';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const LoginRegisterForm: React.FC = () => {
-const [email, setEmail] = React.useState('');
-  const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
+const RegisterForm: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-  const [usernameErrorMessage, setUsernameErrorMessage] = React.useState('');
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const [emailError, setEmailError] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [generalError, setGeneralError] = useState('');
+
+  const navigate = useNavigate();
 
   const validUsernameRegex = /^[a-zA-Z0-9]+$/;
   const validEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -19,24 +21,28 @@ const [email, setEmail] = React.useState('');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    
+    // Reset error messages
+    setEmailError('');
+    setUsernameError('');
+    setPasswordError('');
+    setGeneralError('');
+
+    // Validate inputs
     if (!validEmailRegex.test(email)) {
-      setEmailErrorMessage("Invalid email address. Please enter a valid email.");
+      setEmailError("Invalid email address. Please enter a valid email.");
       return;
     }
 
     if (!validUsernameRegex.test(username)) {
-      setUsernameErrorMessage("Invalid username. Username can only contain letters and numbers.");
+      setUsernameError("Username can only contain letters and numbers.");
       return;
     }
 
     if (!validPasswordRegex.test(password)) {
-      setPasswordErrorMessage("Invalid password. Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.");
+      setPasswordError("Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.");
       return;
     }
-    
-    setEmailErrorMessage("");
-    setUsernameErrorMessage("");
-    setPasswordErrorMessage("");
 
     try {
       const response = await axios.post('http://localhost:5000/register', {
@@ -45,48 +51,66 @@ const [email, setEmail] = React.useState('');
         password
       });
 
-      const data = response.data;
+      const { data } = response;
 
       if (data.message === 'Register successfully') {
-        // Handle successful login (e.g., redirect to a protected page)
-        console.log('Register successful' + data.email + data.username + data.password);
-        setErrorMessage("Register successful");
+        console.log('Registration successful:', data);
+        setGeneralError("Registration successful");
+        // Redirect to home page after successful registration
+        navigate('/');
       } else {
-        setErrorMessage(data.message); // Display error message
+        setGeneralError(data.message);
       }
     } catch (error) {
-      console.error('Error submitting register:', error);
-      setErrorMessage('An error occurred during register. Please try again.');
+      console.error('Error submitting registration:', error);
+      setGeneralError('An error occurred during registration. Please try again.');
     }
   };
 
   return (
     <main>
-      <form onSubmit={handleSubmit}>
-        <div className='globalForm'>
-          <h1>Register Form</h1>
-          <label>
-            <input type="text" placeholder='Email' value={email} onChange={(event) => setEmail(event.target.value)} />
-            {emailErrorMessage && <p className="error-message">{emailErrorMessage}</p>}
-          </label>
-
-          <label>
-            <input type="text" placeholder='Username' value={username} onChange={(event) => setUsername(event.target.value)} />
-            {usernameErrorMessage && <p className="error-message">{usernameErrorMessage}</p>}
-          </label>
-      
-          <label>
-            <input type="password" placeholder='Password' value={password} onChange={(event) => setPassword(event.target.value)} />
-            {passwordErrorMessage && <p className="error-message">{passwordErrorMessage}</p>}
-          </label>
-
-          <Link to="/login">Login</Link>
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
-          <button type="submit">Register</button>
-        </div>
-      </form>
+      <div className='wrapper'>
+        <form onSubmit={handleSubmit}>
+          <h1>Đăng ký</h1>
+          <div className='input-field'>
+            <input 
+              type="email" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              required
+            />
+            <label>Email</label>
+            {emailError && <p className="error-message">{emailError}</p>}
+          </div>
+          <div className='input-field'>
+            <input 
+              type="text" 
+              value={username} 
+              onChange={(e) => setUsername(e.target.value)} 
+              required
+            />
+            <label>Tên đăng nhập</label>
+            {usernameError && <p className="error-message">{usernameError}</p>}
+          </div>  
+          <div className='input-field'>
+            <input 
+              type="password" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              required
+            />
+            <label>Mật khẩu</label>
+            {passwordError && <p className="error-message">{passwordError}</p>}
+          </div>
+          {generalError && <p className="error-message">{generalError}</p>}
+          <button type="submit">Đăng ký</button>
+          <div className='register-login'>
+            <p>Đã có tài khoản? <Link to="/login">Đăng nhập</Link></p>
+          </div>
+        </form>
+      </div>
     </main>
   );
 };
 
-export default LoginRegisterForm;
+export default RegisterForm;
